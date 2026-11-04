@@ -12,7 +12,8 @@
     "test": "vitest run",
     "lint": "eslint .",
     "format": "prettier --write .",
-    "format:check": "prettier --check ."
+    "format:check": "prettier --check .",
+    "check:secrets": "node scripts/check-no-secrets.mjs"
   },
   "devDependencies": {
     "@toon-format/toon": "^4.4.0",
