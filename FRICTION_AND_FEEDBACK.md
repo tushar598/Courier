@@ -21,3 +21,13 @@ Each entry: what we expected (docs), what happened (live), repro, suggested fix.
 ### F3 — Zipher pinned to NU6.2 crate cohort, last commit 8 Jun 2026; Ironwood (NU6.3) live since 28 Jul
 - **Risk:** transactions built with a pre-NU6.3 consensus branch ID are rejected post-activation.
 - **Status:** under test in S2.
+
+### F4 — Zipher HEAD (`eced13d`) does not compile from a clean checkout
+- **Actual:** `error[E0432]: unresolved imports ...create_proposed_transactions_with_expiry_delta, ...propose_zip317_transfer_to_address_with_marginal_fee` in `crates/engine/src/send.rs`.
+- **Cause:** `rust/Cargo.toml` `[patch.crates-io]` points `zcash_client_backend`/`zcash_primitives` at `horizontalsystems/librustzcash` branch `feature/custom-fee-expiry-api`, which is at 0.22.0 / 0.27.1. The engine requires 0.23 / 0.28, so cargo prints `patch ... was not used in the crate graph` and falls back to crates.io 0.23 (no custom-fee APIs). No `rust/Cargo.lock` is committed to pin a working rev.
+- **Workaround:** repoint both patches to branch `hs/custom-fee-expiry-nu6.2-sdk-compatible` (0.23.0 / 0.28.0).
+- **Suggested fix:** pin patches by `rev =` not `branch =`, and commit `rust/Cargo.lock`.
+
+### F5 — npm installer for `@cipherpay/zipher-cli` downloads release binaries without checksum verification
+- `npm/install.js` fetches `github.com/<repo>/releases/download/cli-v<version>/<artifact>` and runs it; no SHA-256 check. npm `0.3.0` (26 Jun) is also newer than repo HEAD (8 Jun), so the published binary cannot be reproduced from public source.
+- **Suggested fix:** ship checksums in the npm package and verify before chmod +x; tag the source commit for each `cli-v*` release.
