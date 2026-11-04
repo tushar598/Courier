@@ -1,75 +1,124 @@
 import type { OrderStatus } from '@courier/core';
 
-const STATUS_STYLE: Record<OrderStatus, string> = {
-  pending_approval: 'bg-amber-100 text-amber-900 ring-amber-300',
-  approved: 'bg-sky-100 text-sky-900 ring-sky-300',
-  purchasing: 'bg-sky-100 text-sky-900 ring-sky-300',
-  awaiting_payment: 'bg-indigo-100 text-indigo-900 ring-indigo-300',
-  paid: 'bg-violet-100 text-violet-900 ring-violet-300',
-  delivered: 'bg-emerald-100 text-emerald-900 ring-emerald-300',
-  denied: 'bg-zinc-100 text-zinc-700 ring-zinc-300',
-  rejected: 'bg-zinc-100 text-zinc-700 ring-zinc-300',
-  failed: 'bg-rose-100 text-rose-900 ring-rose-300',
+type Tone = 'pending' | 'info' | 'ok' | 'bad' | 'neutral';
+
+const TONE: Record<Tone, string> = {
+  pending: 'bg-pending-tint text-pending',
+  info: 'bg-info-tint text-info',
+  ok: 'bg-ok-tint text-ok',
+  bad: 'bg-bad-tint text-bad',
+  neutral: 'bg-sunken text-muted',
 };
 
-const STATUS_LABEL: Record<OrderStatus, string> = {
-  pending_approval: 'Pending approval',
-  approved: 'Approved',
-  purchasing: 'Purchasing',
-  awaiting_payment: 'Awaiting payment',
-  paid: 'Paid',
-  delivered: 'Delivered',
-  denied: 'Denied by policy',
-  rejected: 'Rejected',
-  failed: 'Failed',
+const STATUS: Record<OrderStatus, { label: string; tone: Tone }> = {
+  pending_approval: { label: 'Needs your approval', tone: 'pending' },
+  approved: { label: 'Approved', tone: 'info' },
+  purchasing: { label: 'Buying', tone: 'info' },
+  awaiting_payment: { label: 'Awaiting payment', tone: 'info' },
+  paid: { label: 'Paid, awaiting delivery', tone: 'info' },
+  delivered: { label: 'Delivered to vault', tone: 'ok' },
+  denied: { label: 'Blocked by policy', tone: 'neutral' },
+  rejected: { label: 'Rejected by you', tone: 'neutral' },
+  failed: { label: 'Failed', tone: 'bad' },
 };
 
-export function StatusPill({ status }: { status: OrderStatus }) {
+export function StatusBadge({ status }: { status: OrderStatus }) {
+  const s = STATUS[status];
   return (
     <span
-      className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium ring-1 ring-inset ${STATUS_STYLE[status]}`}
+      className={`inline-flex items-center gap-1.5 rounded-full px-2.5 py-0.5 text-[13px] font-medium ${TONE[s.tone]}`}
     >
-      {STATUS_LABEL[status]}
+      <span className="h-1.5 w-1.5 rounded-full bg-current" aria-hidden />
+      {s.label}
     </span>
   );
 }
 
-export function Card({
-  title,
-  action,
-  children,
-}: {
-  title: string;
-  action?: React.ReactNode;
-  children: React.ReactNode;
-}) {
-  return (
-    <section className="rounded-xl border border-zinc-200 bg-white shadow-sm">
-      <header className="flex items-center justify-between border-b border-zinc-100 px-5 py-3">
-        <h2 className="text-sm font-semibold text-zinc-900">{title}</h2>
-        {action}
-      </header>
-      <div className="p-5">{children}</div>
-    </section>
-  );
+export const DENY_REASON: Record<string, string> = {
+  product_type_not_allowed: 'product type not allowed',
+  country_not_allowed: 'country not allowed',
+  invalid_amount: 'invalid amount',
+  per_order_cap_exceeded: 'over the per-order limit',
+  daily_cap_exceeded: 'over the daily limit',
+};
+
+/** Gift card packages are bare denominations ("10"); say what they are. */
+export function packageLabel(value: string, currency = 'USD'): string {
+  return /^\d+(\.\d+)?$/.test(value) ? `${currency === 'USD' ? '$' : ''}${value} card` : value;
 }
 
-export const usd = (cents: number) => `$${(cents / 100).toFixed(2)}`;
+export const usd = (cents: number) =>
+  new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(cents / 100);
 
-export const time = (ms: number) =>
+export const when = (ms: number) =>
   new Date(ms).toLocaleString('en-IN', {
     timeZone: 'Asia/Kolkata',
     hour: '2-digit',
     minute: '2-digit',
-    second: '2-digit',
-    day: '2-digit',
+    day: 'numeric',
     month: 'short',
   });
 
+export const clock = (ms: number) =>
+  new Date(ms).toLocaleTimeString('en-IN', {
+    timeZone: 'Asia/Kolkata',
+    hour: '2-digit',
+    minute: '2-digit',
+    second: '2-digit',
+  });
+
+/** An opaque handle: the only thing the assistant ever holds. */
 export function Handle({ value }: { value: string }) {
   return (
-    <code className="rounded bg-zinc-100 px-1.5 py-0.5 font-mono text-xs text-zinc-700">
+    <code className="whitespace-nowrap rounded bg-sunken px-1.5 py-0.5 font-mono text-[12.5px] text-muted">
       {value}
     </code>
   );
+}
+
+export function SectionTitle({
+  children,
+  aside,
+}: {
+  children: React.ReactNode;
+  aside?: React.ReactNode;
+}) {
+  return (
+    <div className="mb-3 flex items-baseline justify-between gap-4">
+      <h2 className="text-[17px] font-semibold tracking-tight">{children}</h2>
+      {aside && <div className="text-sm text-muted">{aside}</div>}
+    </div>
+  );
+}
+
+/** Human-readable actor names for the custody log. */
+export function actorLabel(actor: string): string {
+  if (actor === 'agent') return 'Assistant';
+  if (actor === 'policy') return 'Policy';
+  if (actor === 'courier') return 'Courier';
+  if (actor === 'gateway') return 'Leak guard';
+  if (actor.startsWith('human:')) return 'You';
+  return actor;
+}
+
+const EVENT: Record<string, string> = {
+  proposed: 'proposed an order',
+  auto_approved: 'approved it (under your threshold)',
+  approved: 'approved',
+  rejected: 'rejected',
+  purchasing: 'started the purchase',
+  awaiting_payment: 'created the invoice',
+  paid: 'saw payment settle',
+  delivered: 'sealed the goods in your vault',
+  failed: 'marked it failed',
+  denied: 'blocked it',
+  vault_viewed: 'opened the vault',
+  leak_blocked: 'withheld a result containing a secret',
+};
+
+export function eventLabel(event: string, detail: string): string {
+  if (event === 'proposed') {
+    return detail === 'denied' ? 'proposed an order, blocked by policy' : 'proposed an order';
+  }
+  return EVENT[event] ?? event.replaceAll('_', ' ');
 }

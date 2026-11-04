@@ -3,8 +3,8 @@ import { login } from '../actions';
 export const dynamic = 'force-dynamic';
 
 const ERRORS: Record<string, string> = {
-  invalid: 'That token is not right.',
-  unconfigured: 'Set COURIER_CONSOLE_TOKEN in .env to use the console in live mode.',
+  invalid: 'That token does not match COURIER_CONSOLE_TOKEN.',
+  unconfigured: 'Live mode needs a console token. Set COURIER_CONSOLE_TOKEN in .env and restart.',
 };
 
 export default async function LoginPage({
@@ -14,22 +14,27 @@ export default async function LoginPage({
 }) {
   const { error } = await searchParams;
   return (
-    <div className="mx-auto mt-16 max-w-sm rounded-xl border border-zinc-200 bg-white p-6 shadow-sm">
-      <h1 className="text-lg font-semibold">Operator sign-in</h1>
-      <p className="mt-1 text-sm text-zinc-500">
-        Approving purchases and reading the vault is for the human only. The assistant has no route
-        here.
+    <div className="mx-auto mt-16 max-w-sm rounded-2xl border border-rule bg-surface p-7">
+      <h1 className="text-[20px] font-semibold tracking-tight">Sign in to approve purchases</h1>
+      <p className="mt-2 text-sm text-muted">
+        Approving orders and opening the vault happen only here. Your assistant has no way in.
       </p>
-      {error && ERRORS[error] && <p className="mt-3 text-sm text-rose-700">{ERRORS[error]}</p>}
-      <form action={login} className="mt-4 space-y-3">
+      {error && ERRORS[error] && (
+        <p className="mt-4 rounded-lg bg-bad-tint px-3 py-2 text-sm text-bad">{ERRORS[error]}</p>
+      )}
+      <form action={login} className="mt-5 space-y-3">
+        <label className="block text-sm font-medium" htmlFor="token">
+          Console token
+        </label>
         <input
+          id="token"
           name="token"
           type="password"
           required
-          placeholder="Console token"
-          className="w-full rounded-md border border-zinc-300 px-3 py-2 text-sm"
+          autoComplete="current-password"
+          className="w-full rounded-lg border border-rule bg-paper px-3 py-2 text-sm"
         />
-        <button className="w-full rounded-md bg-zinc-900 px-3 py-2 text-sm font-medium text-white">
+        <button className="w-full rounded-lg bg-ink px-3 py-2 text-sm font-medium text-on-ink hover:opacity-90">
           Sign in
         </button>
       </form>

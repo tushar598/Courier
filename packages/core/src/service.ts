@@ -179,6 +179,26 @@ export function classifyInvoice(
   return 'pending';
 }
 
+/**
+ * The exact projection of an order the model receives. Exported so the
+ * console can show the human precisely what the assistant saw.
+ */
+export function toAgentView(o: Order): AgentOrderView {
+  const v: AgentOrderView = {
+    order: o.handle,
+    status: o.status,
+    product_id: o.productId,
+    product_name: o.productName,
+    package_value: o.packageValue,
+    amount: centsToDisplay(o.amountCents),
+    currency: o.currency,
+    requires_human_approval: o.status === 'pending_approval',
+    message: MESSAGES[o.status],
+  };
+  if (o.denyReasons.length > 0) v.deny_reasons = o.denyReasons;
+  return v;
+}
+
 function startOfUtcDay(ms: number): number {
   return ms - (ms % 86_400_000);
 }
@@ -226,19 +246,7 @@ export class Courier {
   }
 
   #view(o: Order): AgentOrderView {
-    const v: AgentOrderView = {
-      order: o.handle,
-      status: o.status,
-      product_id: o.productId,
-      product_name: o.productName,
-      package_value: o.packageValue,
-      amount: centsToDisplay(o.amountCents),
-      currency: o.currency,
-      requires_human_approval: o.status === 'pending_approval',
-      message: MESSAGES[o.status],
-    };
-    if (o.denyReasons.length > 0) v.deny_reasons = o.denyReasons;
-    return v;
+    return toAgentView(o);
   }
 
   async #upstream<T>(fn: () => Promise<T>): Promise<T> {

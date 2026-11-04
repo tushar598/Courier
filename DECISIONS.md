@@ -24,3 +24,4 @@
 - 17:05 — Next 16: console authz is checked in every page and server action (`requireOperator`), not in `proxy.ts`; `cacheComponents` off (always-live data).
 - 17:08 — Relative `COURIER_DATA_DIR` resolves against the repo root so gateway (stdio) and console share one SQLite db + vault key.
 - 17:10 — `/api/mcp` (Streamable HTTP) is enabled only in demo mode, for judges to try the hosted demo; live mode uses the local stdio gateway.
+- 17:35 — Console redesign: security-print ink palette with oxblood reserved for sealed/secret things, IBM Plex Sans/Mono, light+dark tokens in @layer base (fixes dark-mode contrast bug from the scaffold's unlayered body rule); order page splits 'What your assistant saw' (exact toAgentView JSON) vs sealed vault.

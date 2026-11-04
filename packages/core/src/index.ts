@@ -34,6 +34,7 @@ export {
   classifyInvoice,
   revealSecrets,
   secretValuesOf,
+  toAgentView,
   type AgentApi,
   type AgentOrderView,
   type CourierOptions,
