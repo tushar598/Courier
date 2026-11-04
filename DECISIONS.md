@@ -7,3 +7,5 @@
 - 12:12 — Redaction is allowlist-by-schema (gateway builds results from known-safe fields), not denylist regex; regex scan is only a second defensive layer.
 - 12:12 — Mock Bitrefill is a separate package so tests, attack demo and the no-credentials demo mode share one fixture source.
 - 12:16 — TOON decoding via official `@toon-format/toon` (v4.4.0) instead of a hand-rolled parser; verify against live samples in S1.
+- 12:20 — Handle store: AES-256-GCM with handle id as AAD (no blob swapping), SQLite via built-in `node:sqlite` so gateway + console share state; in-memory backend for demo/tests.
+- 12:20 — Policy money in integer cents; daily cap counts pending+approved+paid+delivered to prevent concurrent-proposal overspend.

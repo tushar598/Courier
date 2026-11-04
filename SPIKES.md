@@ -15,7 +15,7 @@
 | Step | Result | Time | Notes |
 |------|--------|------|-------|
 | Clone | PASS | 12:11 | HEAD `eced13d` (8 Jun 2026). Needs `git submodule update --init` (ows-core). |
-| Build zipher-cli | RETRY | 12:22 | HEAD fails to compile (F4: patch branch at wrong version). Repointed patch to `hs/custom-fee-expiry-nu6.2-sdk-compatible`; rebuilding. |
+| Build zipher-cli | RETRY | 12:18 | HEAD fails to compile (F4: patch branch at wrong version). Repointed patch to `hs/custom-fee-expiry-nu6.2-sdk-compatible`; rebuilding. |
 | Wallet init (testnet) | — | | |
 | Sync | — | | |
 | Shielded send w/ memo | — | | Risk: crates pinned "NU6.2 cohort"; Ironwood is NU6.3. |
