@@ -13,7 +13,8 @@ const KEY = process.env.BITREFILL_API_KEY ?? '';
 if (!KEY) throw new Error('BITREFILL_API_KEY missing in .env');
 const BASE = (process.env.BITREFILL_MCP_URL || 'https://api.bitrefill.com/mcp').replace(/\/$/, '');
 
-const SENSITIVE = /token|secret|code|pin|link|url|redemption|install|password|key|voucher|serial|activation|qr/i;
+const SENSITIVE =
+  /token|secret|code|pin|link|url|redemption|install|password|key|voucher|serial|activation|qr/i;
 const scrub = (s) => String(s).split(KEY).join('<KEY>');
 
 function redact(v, k = '') {
@@ -50,7 +51,10 @@ async function rpc(method, params) {
   if (!res.ok) throw new Error(scrub(`HTTP ${res.status}: ${text.slice(0, 300)}`));
   let msg;
   if (ct.includes('text/event-stream')) {
-    const data = text.split('\n').filter((l) => l.startsWith('data:')).map((l) => l.slice(5).trim());
+    const data = text
+      .split('\n')
+      .filter((l) => l.startsWith('data:'))
+      .map((l) => l.slice(5).trim());
     msg = JSON.parse(data.at(-1));
   } else {
     msg = JSON.parse(text);
@@ -82,12 +86,17 @@ mkdirSync(new URL('../secrets/bitrefill-raw/', import.meta.url), { recursive: tr
 mkdirSync(new URL('../fixtures/bitrefill/', import.meta.url), { recursive: true });
 
 const info = await init();
-console.log(`auth=${authMode} server=${JSON.stringify(info.serverInfo)} protocol=${info.protocolVersion}`);
+console.log(
+  `auth=${authMode} server=${JSON.stringify(info.serverInfo)} protocol=${info.protocolVersion}`,
+);
 
 if (cmd === 'list') {
   const r = await rpc('tools/list', {});
   // Tool schemas carry no secrets; keep them as committed fixtures.
-  writeFileSync(new URL('../fixtures/bitrefill/tools-list.json', import.meta.url), scrub(JSON.stringify(r, null, 2)));
+  writeFileSync(
+    new URL('../fixtures/bitrefill/tools-list.json', import.meta.url),
+    scrub(JSON.stringify(r, null, 2)),
+  );
   for (const t of r.tools) {
     const props = Object.keys(t.inputSchema?.properties ?? {});
     const req = t.inputSchema?.required ?? [];
@@ -95,7 +104,10 @@ if (cmd === 'list') {
   }
 } else if (cmd === 'call') {
   const r = await rpc('tools/call', { name: tool, arguments: JSON.parse(argJson ?? '{}') });
-  writeFileSync(new URL(`../secrets/bitrefill-raw/${name}.json`, import.meta.url), scrub(JSON.stringify(r, null, 2)));
+  writeFileSync(
+    new URL(`../secrets/bitrefill-raw/${name}.json`, import.meta.url),
+    scrub(JSON.stringify(r, null, 2)),
+  );
   console.log(`isError=${r.isError ?? false} content parts=${r.content?.length}`);
   for (const part of r.content ?? []) {
     if (part.type !== 'text') {
@@ -115,7 +127,8 @@ if (cmd === 'list') {
       }
     }
     console.log(`--- part format=${fmt} len=${part.text.length}`);
-    if (parsed !== undefined) console.log(scrub(JSON.stringify(redact(parsed), null, 2)).slice(0, 4000));
+    if (parsed !== undefined)
+      console.log(scrub(JSON.stringify(redact(parsed), null, 2)).slice(0, 4000));
   }
   if (r.structuredContent) {
     console.log('--- structuredContent');

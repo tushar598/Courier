@@ -50,10 +50,7 @@ describe('handles', () => {
 
 const backends: [string, () => BlobStore][] = [
   ['memory', () => new MemoryBlobStore()],
-  [
-    'sqlite',
-    () => new SqliteBlobStore(join(mkdtempSync(join(tmpdir(), 'courier-')), 'h.db')),
-  ],
+  ['sqlite', () => new SqliteBlobStore(join(mkdtempSync(join(tmpdir(), 'courier-')), 'h.db'))],
 ];
 
 describe.each(backends)('HandleStore (%s)', (_name, makeStore) => {

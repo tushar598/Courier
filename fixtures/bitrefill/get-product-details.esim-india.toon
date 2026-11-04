@@ -1,0 +1,88 @@
+id: bitrefill-esim-india
+name: Bitrefill eSIM India
+country_code: IN
+currency: USD
+categories[1]: esim
+recipient_type: mixed
+in_stock: true
+ratings:
+  rating_value: 4.5
+  rating_count: 6
+  review_count: 3
+  score_distribution[5]: 0,0,1,1,4
+reviews[5]{content,score,score_max,author_name,created_time,date}:
+  "Getting a lot of blackout zones on Jio network in Mumbai (ex: Phoenix palladium mall, R city mall) where the LTE logo is there but no service. Have been stranded twice at malls as I had no internet to order an uber back.",3,5,ameya.sawant87,"2025-09-24T04:06:45.677Z",2025-09-24
+  Convenient i guess,4,5,Goodera,"2026-08-16T14:25:04.362Z",2026-08-16
+  Damn goood,5,5,carol,"2026-04-03T18:04:51.729Z",2026-04-03
+  "",5,5,alex.willing66,"2026-02-11T15:04:24.182Z",2026-02-11
+  "",5,5,messi.amit80,"2026-10-27T09:07:49.838Z",2026-10-27
+packages[15]{package_value,package_currency,payment_price,payment_currency}:
+  "1GB, 7 Days",USD,"3.89",USD
+  "2GB, 15 Days",USD,"6.66",USD
+  "3GB, 30 Days",USD,"9.11",USD
+  "5GB, 30 Days",USD,"13.80",USD
+  "10GB, 30 Days",USD,"21.63",USD
+  "20GB, 30 Days",USD,"35.55",USD
+  "50GB, 30 Days",USD,"79.05",USD
+  "100GB, 30 Days",USD,"139.95",USD
+  "Unlimited, 1 Day",USD,"9.74",USD
+  "Unlimited, 3 Days",USD,"25.76",USD
+  "Unlimited, 5 Days",USD,"41.78",USD
+  "Unlimited, 7 Days",USD,"57.78",USD
+  "Unlimited, 10 Days",USD,"81.81",USD
+  "Unlimited, 15 Days",USD,"121.85",USD
+  "Unlimited, 30 Days",USD,"242.00",USD
+url: "https://www.bitrefill.com/bitrefill-esim-india/"
+subtitles: Get instant mobile data in India.
+descriptions: "\n        <p>\n            Stay in touch with friends and family using popular apps without any limitations.             Get connected to the internet with the best cellular networks using an             international eSIM.\n            Travel eSIMs are easy to set up: You will receive a QR code immediately.             Scan the code with your phone's camera, and you'll be connected to the internet             within minutes. It's just that easy!\n        </p>\n        <ul>\n            <li>High-speed connection - Connect to the best network.</li>\n            <li>Get an instant internet connection.</li>\n            <li>Keep your primary SIM while traveling worldwide.</li>\n            <li>No hidden fees.</li>\n        </ul>\n        <p>\n            <b>Important</b>\n        </p>\n        <p>\n            Please, before purchasing, ensure the availability of coverage and <a href=\"https://www.bitrefill.com/esims/compatibility\">device compatibility</a>,             as network coverage is limited to the plan's designated country or region.\n        </p>\n    "
+instructions: "\n        <p>After purchase, you will receive a QR Code and activation code, with instructions to install the eSIM through Settings.</p>\n        <ol>\n            <li>Scan the QR Code or add the activation code manually.</li>\n            <li>Turn on data roaming from your Settings.</li>\n            <li>Enjoy the fast network connection!</li>\n        </ol>\n        <p>\n            <b>Reminder:</b> To install the eSIM, a stable internet connection is necessary.             Consider setting up the eSIM before traveling abroad, allowing instant access to the connection upon arrival.             This eSIM can only be installed once. Validity starts when connected to a compatible network.\n        </p>\n        "
+techSpecs: "\n                    <ul>\n                        <li><b>Coverage:</b> Free roaming in the <a href=\"https://www.bitrefill.com/esims/coverage\">following countries</a></li>\n                        <li><b>Plan type:</b> Data only</li>\n                        <li><b>Speed:</b> 2G/3G/4G/5G</li>\n                        <li><b>Network:</b> Airtel, Jio, Bharti Airtel, Vodafone Idea</li>\n                        <li><b>Validity time:</b> You can activate the eSIM before heading to any of the supported countries, but its validity time won't begin until you turn it on within one of those countries.</li>\n                        <li><b>APN:</b> data.esim</li>\n                        <li><b>Wifi hotspot:</b> Supported</li>\n                        <li><b>Phone number:</b> Not included</li>\n                        <li><b>SMS:</b> Not supported</li>\n                        <li><b>Unlimited product specifics:</b>\n                <ul>\n                <li><b>Plan type:</b> Unlimited Data</li>\n                <li><b>Throttling:</b> 2GB of data unthrottled per 24 hours and thereafter unlimited data at 2mbs.  The 24h period is calculated from the point the bundle is first used.  The unthrottled 2GB data allowance will reset every 24 hours</li>\n                <li><b>Speed:</b> 2G/3G/4G/5G</li>\n                <li>After the above data limits have been reached, the eSIM is throttled to a speed of 2 Mbps. This is sufficient for regular internet usage but may affect certain live streaming services.</li>\n                <li><b>Network:</b> </li>\n                </ul>\n                </li>\n    \n                    </ul>\n                "
+payment_methods:
+  address_based[24]: ethereum,eth_base,usdc_base,usdt_erc20,usdt_trc20,usdc_erc20,usdc_polygon,usdt_polygon,usdc_arbitrum,usdt_arbitrum,usdc_solana,usdt_solana,solana,eth_arbitrum,usdc_bsc,usdt_bsc,lightning,ark,bitcoin,dogecoin,dash,litecoin,ton,usdt_ton
+  link_only[6]: fiat_card,google_pay,apple_pay,ideal,eps,p24
+  balance[2]: balance,cashback
+account_balances:
+  product_currency: USD
+  balances[4]:
+    - payment_method: balance
+      balance_currency: BTC
+      amount: "0.00000000"
+      amount_base: 0
+      decimals: 8
+      equivalent_in_product_currency:
+        amount: "0.00"
+        amount_base: 0
+        decimals: 2
+        currency: USD
+      primary: true
+    - payment_method: balance
+      balance_currency: EUR
+      amount: "0.00"
+      amount_base: 0
+      decimals: 2
+      equivalent_in_product_currency:
+        amount: "0.00"
+        amount_base: 0
+        decimals: 2
+        currency: USD
+    - payment_method: balance
+      balance_currency: USD
+      amount: "25.00"
+      amount_base: 2500
+      decimals: 2
+      equivalent_in_product_currency:
+        amount: "25.00"
+        amount_base: 2500
+        decimals: 2
+        currency: USD
+    - payment_method: cashback
+      balance_currency: BTC
+      amount: "0.00000000"
+      amount_base: 0
+      decimals: 8
+      equivalent_in_product_currency:
+        amount: "0.00"
+        amount_base: 0
+        decimals: 2
+        currency: USD
+  note: "Each balance entry is a separate sub-account. `amount` is a decimal string in `balance_currency` with `decimals` decimals; `amount_base` is the same value in base units (cents, satoshis). `equivalent_in_product_currency` is the same amount converted to `product_currency` for comparison with package prices. Multi-balance payments (combining sub-accounts) are not supported yet — each purchase debits a single sub-account. When paying with payment_method=\"balance\", pass balance_currency to pick the sub-account."

@@ -13,7 +13,9 @@
     "lint": "eslint .",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
-    "check:secrets": "node scripts/check-no-secrets.mjs"
+    "check:secrets": "node scripts/check-no-secrets.mjs",
+    "gateway": "node packages/gateway/dist/bin/stdio.js",
+    "mock": "node packages/mock-bitrefill/dist/bin/serve.js"
   },
   "devDependencies": {
     "@toon-format/toon": "^4.4.0",

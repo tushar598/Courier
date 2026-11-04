@@ -24,6 +24,11 @@ export class VaultKey {
     return new VaultKey(randomBytes(32));
   }
 
+  /** Fresh key material for writing to a 0600 key file. */
+  static generateBase64(): string {
+    return randomBytes(32).toString('base64');
+  }
+
   /** Never serialise the key by accident (logs, JSON, util.inspect). */
   toJSON(): string {
     return '[VaultKey]';

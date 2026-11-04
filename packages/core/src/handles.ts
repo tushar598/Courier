@@ -64,8 +64,7 @@ export class SqliteBlobStore implements BlobStore {
   }
   get(id: string): { blob: Buffer; expiresAt: number } | undefined {
     const row = this.#db.prepare('SELECT blob, expires_at FROM handles WHERE id = ?').get(id) as
-      | { blob: Uint8Array; expires_at: number }
-      | undefined;
+      { blob: Uint8Array; expires_at: number } | undefined;
     return row && { blob: Buffer.from(row.blob), expiresAt: row.expires_at };
   }
   delete(id: string): void {

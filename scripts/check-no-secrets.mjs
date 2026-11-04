@@ -24,7 +24,11 @@ const secretsDir = `${root}secrets`;
 if (existsSync(secretsDir)) {
   for (const f of readdirSync(secretsDir).filter((f) => f.endsWith('.out'))) {
     const m = /"seed_phrase"\s*:\s*"([^"]+)"/.exec(readFileSync(`${secretsDir}/${f}`, 'utf8'));
-    if (m?.[1]) needles.push([`seed:${f}`, m[1]], [`seed-first-6-words:${f}`, m[1].split(' ').slice(0, 6).join(' ')]);
+    if (m?.[1])
+      needles.push(
+        [`seed:${f}`, m[1]],
+        [`seed-first-6-words:${f}`, m[1].split(' ').slice(0, 6).join(' ')],
+      );
   }
   const pass = `${secretsDir}/zipher-vault-pass`;
   if (existsSync(pass)) needles.push(['zipher-vault-pass', readFileSync(pass, 'utf8').trim()]);
@@ -58,6 +62,8 @@ for (const [label, value] of needles) {
 const forbidden = tracked.filter((f) => /^(secrets\/|\.env$|\.env\.(?!example$))/.test(f));
 for (const f of forbidden) console.error(`FORBIDDEN tracked file: ${f}`);
 
-console.log(`checked ${needles.length} secret values against history + ${tracked.length} tracked files`);
+console.log(
+  `checked ${needles.length} secret values against history + ${tracked.length} tracked files`,
+);
 if (failures || forbidden.length) process.exit(1);
 console.log('OK: no secrets found');
