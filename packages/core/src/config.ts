@@ -1,5 +1,5 @@
 import { chmodSync, existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
-import { join, resolve } from 'node:path';
+import { dirname, isAbsolute, join, resolve } from 'node:path';
 import { z } from 'zod';
 import { VaultKey } from './crypto.js';
 import { PolicyConfigSchema, type PolicyConfig } from './policy.js';
@@ -47,8 +47,22 @@ export function loadPolicy(env: Env): PolicyConfig {
   return PolicyConfigSchema.parse(JSON.parse(readFileSync(env.COURIER_POLICY_FILE, 'utf8')));
 }
 
+/** Nearest ancestor containing pnpm-workspace.yaml, so every process agrees on paths. */
+export function findRepoRoot(from: string = process.cwd()): string {
+  let dir = resolve(/* turbopackIgnore: true */ from);
+  for (;;) {
+    if (existsSync(join(/* turbopackIgnore: true */ dir, 'pnpm-workspace.yaml'))) return dir;
+    const up = dirname(dir);
+    if (up === dir) return resolve(/* turbopackIgnore: true */ from);
+    dir = up;
+  }
+}
+
+/** Relative COURIER_DATA_DIR resolves against the repo root (gateway and console share it). */
 export function dataDir(env: Env): string {
-  const dir = resolve(env.COURIER_DATA_DIR);
+  const dir = isAbsolute(env.COURIER_DATA_DIR)
+    ? env.COURIER_DATA_DIR
+    : join(/* turbopackIgnore: true */ findRepoRoot(), env.COURIER_DATA_DIR);
   mkdirSync(dir, { recursive: true, mode: 0o700 });
   return dir;
 }

@@ -6,7 +6,7 @@ Window: 11:30 → 00:00 IST. Feature freeze 23:00. Team: 1 human + Claude Code (
 
 | #   | Task                                                                                 | Target | Owner                                       | Status          |
 | --- | ------------------------------------------------------------------------------------ | ------ | ------------------------------------------- | --------------- |
-| 0.1 | Repo, pnpm workspace, tooling (TS strict, ESLint, Prettier, vitest)                  | 12:30  | Claude                                      | ⏳              |
+| 0.1 | Repo, pnpm workspace, tooling (TS strict, ESLint, Prettier, vitest)                  | 12:30  | Claude                                      | ✅ 12:14        |
 | 0.2 | S1a: Bitrefill MCP initialize + tools/list, capture schemas to `fixtures/bitrefill/` | 12:45  | Claude (needs API key)                      | ⛔ blocked: key |
 | 0.3 | S1b: TOON sample captured + decoder passes on it                                     | 13:00  | Claude                                      | ⏳              |
 | 0.4 | S1c: one `-syldavia` test purchase end to end (buy → poll → redemption_info)         | 13:15  | Claude (needs mentor-enabled test products) | ⛔ blocked      |
@@ -47,3 +47,14 @@ Window: 11:30 → 00:00 IST. Feature freeze 23:00. Team: 1 human + Claude Code (
 ## Cut order if late
 
 Tier 3 → real-rail video becomes "simulated rail" (labelled). Tier 2 → vault-only + receipt memo. Never cut: tests, attack demo, demo-mode deploy, README.
+
+## Re-plan 16:50 (solo, S2 failed, test products not enabled)
+
+| Step    | Scope                                                                                                   | Status              |
+| ------- | ------------------------------------------------------------------------------------------------------- | ------------------- |
+| 1       | core service + mock + gateway + required tests                                                          | ✅ 17:07 (33 tests) |
+| 2       | approval console (pending/approve/reject, vault + eSIM QR, spend vs cap, activity log, demo `/api/mcp`) | ✅ 17:11            |
+| 3       | one real $3.89 eSIM through Courier, human-approved (needs user OK)                                     | ⏳                  |
+| 4       | attack demo + deploy demo mode                                                                          | ⏳                  |
+| 5       | README, video, submit                                                                                   | ⏳                  |
+| stretch | Zcash receipt memo (NU7-capable wallet), x402 relay                                                     | cut unless time     |

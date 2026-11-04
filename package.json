@@ -7,7 +7,7 @@
     "node": ">=22"
   },
   "scripts": {
-    "build": "pnpm -r build",
+    "build": "pnpm -r --filter ./packages/* build && pnpm --filter @courier/console build",
     "typecheck": "pnpm -r typecheck",
     "test": "vitest run",
     "lint": "eslint .",
@@ -15,9 +15,13 @@
     "format:check": "prettier --check .",
     "check:secrets": "node scripts/check-no-secrets.mjs",
     "gateway": "node packages/gateway/dist/bin/stdio.js",
-    "mock": "node packages/mock-bitrefill/dist/bin/serve.js"
+    "mock": "node packages/mock-bitrefill/dist/bin/serve.js",
+    "console": "pnpm --filter @courier/console start",
+    "console:dev": "pnpm --filter @courier/console dev",
+    "smoke": "node scripts/smoke-gateway.mjs"
   },
   "devDependencies": {
+    "@modelcontextprotocol/sdk": "^1.32.2",
     "@toon-format/toon": "^4.4.0",
     "@types/node": "^26.6.6",
     "eslint": "^10.14.0",

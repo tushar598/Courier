@@ -15,3 +15,12 @@
 - 16:25 — S2 gate: FAIL (Zipher v0.2.0 cannot spend post-NU6.3/NU7). Vault-only delivery; receipt memo via NU7-capable wallet is a 30-min Tier 2 timebox.
 - 16:25 — Delivery is an interface (`DeliveryAdapter`: vault | zcash-memo) so the Zcash leg can be added without gateway changes.
 - 16:26 — Repo pushed to github.com/tushar598/Courier; `pnpm check:secrets` must pass before every push.
+- 16:55 — Solo team: Tier 3 (ZEC relay + x402) cut to stretch. Real proof = one human-approved $3.89 eSIM paid from Bitrefill USD balance via Courier.
+- 17:00 — Courier service exposes two objects: frozen `AgentApi` (4 functions) for the gateway, `OperatorApi` for the console. The gateway module never imports the operator side.
+- 17:00 — invoice_id is treated as a secret (with an account key it alone reads the codes); the model only ever gets `ord_` handles.
+- 17:00 — Prices are re-read from Bitrefill at proposal time; the model cannot set an amount.
+- 17:00 — Products needing recipient data (`refill_input`) or prepayment steps are refused (no PII through the model).
+- 17:02 — Leak guard on every agent result: blocks any vault value or UUID-shaped string (defence in depth behind allowlisted outputs).
+- 17:05 — Next 16: console authz is checked in every page and server action (`requireOperator`), not in `proxy.ts`; `cacheComponents` off (always-live data).
+- 17:08 — Relative `COURIER_DATA_DIR` resolves against the repo root so gateway (stdio) and console share one SQLite db + vault key.
+- 17:10 — `/api/mcp` (Streamable HTTP) is enabled only in demo mode, for judges to try the hosted demo; live mode uses the local stdio gateway.

@@ -44,6 +44,7 @@ export {
   DEFAULT_POLICY,
   EnvSchema,
   dataDir,
+  findRepoRoot,
   loadEnv,
   loadPolicy,
   loadVaultKey,
