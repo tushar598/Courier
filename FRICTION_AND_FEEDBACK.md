@@ -31,3 +31,21 @@ Each entry: what we expected (docs), what happened (live), repro, suggested fix.
 ### F5 — npm installer for `@cipherpay/zipher-cli` downloads release binaries without checksum verification
 - `npm/install.js` fetches `github.com/<repo>/releases/download/cli-v<version>/<artifact>` and runs it; no SHA-256 check. npm `0.3.0` (26 Jun) is also newer than repo HEAD (8 Jun), so the published binary cannot be reproduced from public source.
 - **Suggested fix:** ship checksums in the npm package and verify before chmod +x; tag the source commit for each `cli-v*` release.
+
+### F6 — npm `@cipherpay/zipher-cli@0.3.0` points at a GitHub release that does not exist
+- `install.js` downloads `releases/download/cli-v${version}/…`; the only published release is `cli-v0.2.0` (28 Apr 2026). Installing 0.3.0 → HTTP 404 in postinstall.
+- (Correction to F5: releases *do* publish `.sha256` files; the installer just doesn't check them.)
+- **Suggested fix:** publish `cli-v0.3.0` assets (or pin npm to 0.2.0) and verify `.sha256` in `install.js`.
+
+### F7 — Default Zipher testnet lightwalletd rejects HTTP/2
+- `zipher-cli --testnet wallet init` → `transport error: received fatal alert: NoApplicationProtocol`.
+- **Repro:** `openssl s_client -connect lightwalletd.testnet.cipherscan.app:443 -alpn h2` → TLS alert 120 (no_application_protocol). gRPC needs h2.
+- **Workaround:** `--server https://testnet.zec.rocks:443` (negotiates h2).
+- **Note:** on a failed init, the OWS vault wallet is still created; a re-run says "already exists — reusing it" (good: idempotent).
+
+### F8 — OWS vault is global per `$HOME`, not per `--data-dir`
+- Two `wallet init` calls with different `--data-dir` reuse the same OWS wallet `default` → same seed. Running relay + buyer wallets on one machine needs `HOME=<other dir>`.
+- **Suggested fix:** `--ows-wallet <name>` flag or derive the OWS wallet name from data-dir.
+
+### F9 — Testnet faucets unavailable from hackathon network (12:31 IST)
+- `testnet.zecfaucet.com` (the faucet URL embedded in Zipher) → no connection; `testnet.cipherscan.app/faucet` → bare 429.
