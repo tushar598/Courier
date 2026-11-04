@@ -27,9 +27,15 @@ export function courierEnv(): Env {
   return env();
 }
 
-/** Hosted demo (no disk, no credentials): COURIER_EPHEMERAL=1. */
+/**
+ * Hosted demo (no writable disk, no credentials): COURIER_EPHEMERAL=1, or
+ * automatically when the demo runs on Vercel, whose filesystem is read-only.
+ */
 export function isEphemeral(): boolean {
-  return process.env.COURIER_EPHEMERAL === '1';
+  return (
+    process.env.COURIER_EPHEMERAL === '1' ||
+    (process.env.VERCEL === '1' && env().COURIER_MODE === 'demo')
+  );
 }
 
 export function runtime(): Promise<Runtime> {
