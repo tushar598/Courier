@@ -19,8 +19,9 @@
 | Use release binary | PASS | 12:27 | `cli-v0.2.0` darwin-arm64 (28 Apr 2026), SHA-256 verified `ca93407d…328fa`. Only release published (F6). |
 | Wallet init (testnet) | PASS | 12:30 | Default server `lightwalletd.testnet.cipherscan.app` fails TLS ALPN (F7); used `--server https://testnet.zec.rocks:443`. Relay + buyer wallets (separate `HOME` → separate OWS vault). Seeds in `secrets/` (0600, gitignored), never printed. |
 | Fund relay with TAZ | BLOCKED | 12:31 | `testnet.zecfaucet.com` unreachable; `testnet.cipherscan.app/faucet` → 429. Needs human (browser faucet or mentor). |
-| Sync | RUNNING | 12:30 | |
-| Shielded send w/ memo | — | | Risk: crates pinned "NU6.2 cohort"; Ironwood is NU6.3. |
+| Sync | PASS | 16:24 | Relay synced to 4581802 (tip 4581803, testnet.zcashexplorer.app). Network drops (DNS/TLS EOF) need retries. Receive path (compact-block scan) works past NU7. |
+| Shielded send w/ memo | FAIL (by protocol) | 16:25 | Testnet explorer `upgrades`: **NU7 active at 4465026** (tip branch `77190ad9`), NU6.3 at 4134000. Zipher `v0.2.0` (Apr 2026) predates NU6.3 and NU7, so it cannot build valid txs on testnet. Funds sent by human not yet seen at tip; will attempt a send once they land to capture the exact rejection. |
 
-## Gate 13:30 decision
-_pending_
+## Gate decision (taken 16:25; gate was 13:30, delayed waiting on TAZ)
+**S2 = FAIL → fallback as pre-agreed:** secrets are delivered to the vault (console) only; the Zcash leg becomes a *receipt memo* (handle + order status, no secret) if a NU7-capable wallet can be stood up within a 30-min timebox in Tier 2 (candidates: zingo-cli, Zallet). The delivery adapter is an interface, so memo delivery drops in later without touching the gateway.
+**S1 = PARTIAL:** auth, tools/list, TOON pass; test purchase blocked on mentor enabling `-syldavia` products. Tier 1 proceeds against `mock-bitrefill` built from live fixtures.

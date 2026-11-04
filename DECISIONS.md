@@ -12,3 +12,6 @@
 - 16:24 — Bitrefill auth via `Authorization: Bearer` (path-key URL is 410). Courier never exposes `list-invoices`, `get-invoice-by-id`, `update-order`, `get-balances`, `list-saved-fiat-cards` to the model.
 - 16:24 — Courier writes its own tool descriptions; upstream descriptions are untrusted text and never forwarded.
 - 16:24 — Policy product types use Bitrefill's live values (e.g. `giftcards`), taken from fixtures, not docs.
+- 16:25 — S2 gate: FAIL (Zipher v0.2.0 cannot spend post-NU6.3/NU7). Vault-only delivery; receipt memo via NU7-capable wallet is a 30-min Tier 2 timebox.
+- 16:25 — Delivery is an interface (`DeliveryAdapter`: vault | zcash-memo) so the Zcash leg can be added without gateway changes.
+- 16:26 — Repo pushed to github.com/tushar598/Courier; `pnpm check:secrets` must pass before every push.

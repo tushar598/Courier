@@ -72,3 +72,8 @@ Each entry: what we expected (docs), what happened (live), repro, suggested fix.
 
 ### F14 — Mixed tool naming
 - Kebab-case (`search-products`, `get-invoice-by-id`) alongside snake_case (`search_help_articles`, `get_help_article`).
+
+### F15 — No current agent wallet can send on testnet: NU7 is already active there
+- `testnet.zcashexplorer.app/api/v1/blockchain-info` (16:25 IST): `NU7 activationheight 4465026 active`, `NU6.3 4134000 active`, tip branch `77190ad9`.
+- Zipher's only release (`cli-v0.2.0`, 28 Apr) predates both NU6.3 and NU7; source HEAD (8 Jun) is "NU6.2 cohort" and does not compile (F4). Receiving (compact-block scan) still works, so a wallet looks healthy until it tries to spend.
+- **Suggested fix:** Zipher: an NU7-ready release before mainnet NU7 (expected 5–6 Nov), and a startup check that refuses to build a tx when the server's `consensus_branch_id` is unknown (the source already logs a mismatch in `sync.rs` but only as a warning).
