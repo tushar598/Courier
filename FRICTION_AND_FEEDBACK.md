@@ -49,3 +49,26 @@ Each entry: what we expected (docs), what happened (live), repro, suggested fix.
 
 ### F9 — Testnet faucets unavailable from hackathon network (12:31 IST)
 - `testnet.zecfaucet.com` (the faucet URL embedded in Zipher) → no connection; `testnet.cipherscan.app/faucet` → bare 429.
+
+## Bitrefill (with API key)
+
+### F10 — Documented `/mcp/<API_KEY>` URL returns 410 Gone
+- **Docs:** `https://api.bitrefill.com/mcp/<API_KEY>`.
+- **Live (16:20 IST):** `POST /mcp/<KEY>` → `HTTP 410 {"jsonrpc":"2.0","error":{"code":-32000,"message":"This endpoint has b…"}}`. `POST /mcp` with `Authorization: Bearer <KEY>` → 200.
+- **Suggested fix:** update docs to the Bearer header (also safer: keys in URLs end up in proxy and client logs).
+
+### F11 — Rate limit confirmed at 60 per 30 s when authenticated
+- `ratelimit-policy: 60;w=30` with a valid key too. Docs say 30/min (4x lower). See F1.
+
+### F12 — Tool descriptions steer the model toward secrets and external instructions
+- `list-invoices` description: "Use get-invoice-by-id for one invoice's orders and codes."
+- `search-products` description: tells the model to "read https://www.bitrefill.com/agents/SKILL.md before the first purchase".
+- `get-invoice-by-id` only *requires* `invoice_id`; with an account API key the access token is optional, so any model holding the key can list every past invoice and read its codes.
+- **Not a vulnerability** (the key is the owner's), but a design gap for agent use: one key = full read access to purchase history. **Suggested fix:** scoped API keys (e.g. `purchase-only`, no `list-invoices` / code read), and a response flag to omit `redemption_info`.
+
+### F13 — Test products: silent empty result when not enabled
+- `search-products {"query":"syldavia","country":"KN"}` → `found: 0`; `get-product-details delos-syldavia` → `product_not_found`, no hint that test products need enabling.
+- **Suggested fix:** a `test_products_enabled` field in `get-balances` or a hint in the not-found error for `*-syldavia` slugs.
+
+### F14 — Mixed tool naming
+- Kebab-case (`search-products`, `get-invoice-by-id`) alongside snake_case (`search_help_articles`, `get_help_article`).

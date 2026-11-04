@@ -166,6 +166,9 @@ importers:
 
   .:
     devDependencies:
+      '@toon-format/toon':
+        specifier: ^4.4.0
+        version: 4.4.0
       '@types/node':
         specifier: ^26.6.6
         version: 26.6.6

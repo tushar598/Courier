@@ -9,3 +9,6 @@
 - 12:16 — TOON decoding via official `@toon-format/toon` (v4.4.0) instead of a hand-rolled parser; verify against live samples in S1.
 - 12:20 — Handle store: AES-256-GCM with handle id as AAD (no blob swapping), SQLite via built-in `node:sqlite` so gateway + console share state; in-memory backend for demo/tests.
 - 12:20 — Policy money in integer cents; daily cap counts pending+approved+paid+delivered to prevent concurrent-proposal overspend.
+- 16:24 — Bitrefill auth via `Authorization: Bearer` (path-key URL is 410). Courier never exposes `list-invoices`, `get-invoice-by-id`, `update-order`, `get-balances`, `list-saved-fiat-cards` to the model.
+- 16:24 — Courier writes its own tool descriptions; upstream descriptions are untrusted text and never forwarded.
+- 16:24 — Policy product types use Bitrefill's live values (e.g. `giftcards`), taken from fixtures, not docs.
