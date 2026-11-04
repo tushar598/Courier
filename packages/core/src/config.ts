@@ -1,5 +1,6 @@
 import { chmodSync, existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { dirname, isAbsolute, join, resolve } from 'node:path';
+import { fileURLToPath } from 'node:url';
 import { z } from 'zod';
 import { VaultKey } from './crypto.js';
 import { PolicyConfigSchema, type PolicyConfig } from './policy.js';
@@ -47,15 +48,27 @@ export function loadPolicy(env: Env): PolicyConfig {
   return PolicyConfigSchema.parse(JSON.parse(readFileSync(env.COURIER_POLICY_FILE, 'utf8')));
 }
 
-/** Nearest ancestor containing pnpm-workspace.yaml, so every process agrees on paths. */
-export function findRepoRoot(from: string = process.cwd()): string {
+function workspaceAbove(from: string): string | undefined {
   let dir = resolve(/* turbopackIgnore: true */ from);
   for (;;) {
     if (existsSync(join(/* turbopackIgnore: true */ dir, 'pnpm-workspace.yaml'))) return dir;
     const up = dirname(dir);
-    if (up === dir) return resolve(/* turbopackIgnore: true */ from);
+    if (up === dir) return undefined;
     dir = up;
   }
+}
+
+/**
+ * The Courier repo root, so every process agrees on paths. Tries the working
+ * directory first, then this module's own location: MCP clients such as
+ * Claude Desktop launch the gateway from an unrelated directory.
+ */
+export function findRepoRoot(from: string = process.cwd()): string {
+  return (
+    workspaceAbove(from) ??
+    workspaceAbove(dirname(fileURLToPath(import.meta.url))) ??
+    resolve(/* turbopackIgnore: true */ from)
+  );
 }
 
 /** Relative COURIER_DATA_DIR resolves against the repo root (gateway and console share it). */

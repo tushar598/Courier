@@ -51,6 +51,7 @@ function SecretRow({ label, value }: { label: string; value: string }) {
 
 function SealedVault({ order }: { order: Order }) {
   const delivered = order.status === 'delivered';
+  const hasData = Boolean(order.vaultHandle);
   return (
     <div className="flex h-full flex-col">
       <div className="space-y-2.5" aria-hidden>
@@ -65,10 +66,12 @@ function SealedVault({ order }: { order: Order }) {
         <p className="text-sm text-muted">
           {delivered
             ? 'Sealed. Codes and links are encrypted at rest and have never been shown to your assistant. Opening the vault is recorded.'
-            : 'Empty. When Bitrefill delivers, the codes are sealed here, not sent to your assistant.'}
+            : hasData
+              ? 'Sealed. The invoice is here; codes appear once Bitrefill delivers. You can open it now to check.'
+              : 'Empty. When Bitrefill delivers, the codes are sealed here, not sent to your assistant.'}
         </p>
       </div>
-      {delivered && (
+      {hasData && (
         <Link
           href={`/orders/${order.handle}?reveal=1`}
           className="mt-6 inline-flex w-fit items-center rounded-lg bg-seal px-4 py-2 text-sm font-medium text-on-ink hover:opacity-90"
@@ -145,10 +148,11 @@ export default async function OrderPage({
   const order = await rt.operator.advance(handle).catch(() => rt.operator.getOrder(handle));
   if (!order) notFound();
 
+  // Any order holding purchase data can be opened, even if Bitrefill's status
+  // words were not recognised, so a paid order can never be locked away.
   const secrets =
-    reveal === '1' && order.status === 'delivered'
-      ? rt.operator.reveal(handle, operator)
-      : undefined;
+    reveal === '1' && order.vaultHandle ? rt.operator.reveal(handle, operator) : undefined;
+  const upstream = rt.operator.upstreamStatus(handle);
   const events = rt.operator.events().filter((e) => e.orderHandle === handle);
   const agentView = JSON.stringify(toAgentView(order), null, 2);
 
@@ -168,8 +172,9 @@ export default async function OrderPage({
             {packageLabel(order.packageValue, order.currency)},{' '}
             <span className="tabular-nums">{usd(order.amountCents)}</span>
           </p>
-          <div className="mt-3">
+          <div className="mt-3 flex flex-wrap items-center gap-3">
             <StatusBadge status={order.status} />
+            {upstream && <span className="text-sm text-muted">Bitrefill says: {upstream}</span>}
           </div>
         </div>
         {IN_FLIGHT.includes(order.status) && (

@@ -87,6 +87,8 @@ export interface OperatorApi {
   advance(handle: string): Promise<Order>;
   advanceAll(): Promise<void>;
   reveal(handle: string, operator: string): RevealedSecrets | undefined;
+  /** Bitrefill's own status words for the invoice (not secret), for debugging. */
+  upstreamStatus(handle: string): string | undefined;
   events(): OrderEvent[];
   spentTodayCents(): number;
   policy(): PolicyConfig;
@@ -446,6 +448,12 @@ export class Courier {
         o.vaultHandle,
       );
       const state = classifyInvoice(inv.raw);
+      const rawStatus = String(
+        ((inv.raw.invoice as Record<string, unknown> | undefined) ?? inv.raw).status ?? '',
+      ).toLowerCase();
+      if (state === 'pending' && !['unpaid', 'pending', 'created', 'new', ''].includes(rawStatus)) {
+        this.#emit('warn', `unrecognised invoice status "${rawStatus.slice(0, 40)}"`, o.handle);
+      }
       if (state === 'delivered') {
         this.#o.orders.transition(o.handle, ['awaiting_payment', 'paid'], 'delivered', 'courier');
       } else if (state === 'paid') {
@@ -504,6 +512,16 @@ export class Courier {
         if (!payload) return undefined;
         this.#o.orders.log(h, `human:${operator}`, 'vault_viewed', '');
         return revealSecrets(payload);
+      },
+      upstreamStatus: (h) => {
+        const o = this.#o.orders.get(h);
+        const payload = o?.vaultHandle ? this.#o.vault.get<VaultPayload>(o.vaultHandle) : undefined;
+        if (!payload) return undefined;
+        const inv =
+          (payload.invoice?.invoice as Record<string, unknown> | undefined) ?? payload.invoice;
+        const status =
+          inv?.status ?? (payload.buy.payment_info as Record<string, unknown> | undefined)?.status;
+        return typeof status === 'string' ? status.slice(0, 40) : undefined;
       },
       events: () => this.#o.orders.events(),
       spentTodayCents: () => this.#o.orders.committedSince(startOfUtcDay(this.#o.now())),
