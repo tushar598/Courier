@@ -1,3 +1,5 @@
 pnpm-lock.yaml
 fixtures/
 .vendor/
+apps/console/next-env.d.ts
+.next/
