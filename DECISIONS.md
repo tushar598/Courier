@@ -6,3 +6,4 @@
 - 12:12 — `wallet init` seed output goes to a gitignored 0600 file, never into agent/LLM context (we eat our own dog food).
 - 12:12 — Redaction is allowlist-by-schema (gateway builds results from known-safe fields), not denylist regex; regex scan is only a second defensive layer.
 - 12:12 — Mock Bitrefill is a separate package so tests, attack demo and the no-credentials demo mode share one fixture source.
+- 12:16 — TOON decoding via official `@toon-format/toon` (v4.4.0) instead of a hand-rolled parser; verify against live samples in S1.
